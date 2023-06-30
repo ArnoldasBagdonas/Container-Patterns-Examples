@@ -43,7 +43,7 @@ Each container pattern is accompanied by a dedicated example folder containing r
 
 To get started with the examples, follow these steps:
 
-1. Clone this repository: `git clone https://github.com/your-username/container-patterns-examples.git`
+1. Clone this repository: `git clone https://github.com/bagdoportfolio/container-patterns-examples.git`
 2. Navigate to the desired example folder: `cd container-patterns-examples/<pattern-name>`
 3. Follow the instructions provided in the example's README to build and run the container.
 
