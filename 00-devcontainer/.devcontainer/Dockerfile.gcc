@@ -1,0 +1,42 @@
+# Base image
+FROM alpine:latest
+
+# Install dependencies
+RUN apk update && apk add --no-cache build-base linux-headers binutils libtool flex bison wget 
+
+WORKDIR /tmp
+
+ARG GCC_VERSION=10.1.0
+
+# Extract the major and minor versions from GCC_VERSION
+#ARG GCC_SUFFIX_STRING=$(echo ${GCC_VERSION} | cut -d '.' -f 1).$(echo ${GCC_VERSION} | cut -d '.' -f 2)
+
+# Download and extract GCC source code
+RUN wget https://ftpmirror.gnu.org/gcc/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.xz && \
+    tar xf gcc-${GCC_VERSION}.tar.xz
+
+# Set working directory
+WORKDIR /tmp/gcc-${GCC_VERSION}
+
+# Download additional prerequisites
+RUN ./contrib/download_prerequisites
+
+# Set build directory
+WORKDIR /tmp/gcc-${GCC_VERSION}-build
+
+# Configure the build
+#RUN $PWD/../gcc-${GCC_VERSION}/configure --prefix=/usr/local/gcc-${GCC_VERSION} --program-suffix=-${GCC_SUFFIX_STRING} --disable-multilib --disable-nls  --disable-bootstrap --disable-libsanitizer --enable-languages=c,c++
+RUN $PWD/../gcc-${GCC_VERSION}/configure --prefix=/usr/local/gcc-${GCC_VERSION} --disable-multilib --disable-nls  --disable-bootstrap --disable-libsanitizer --enable-languages=c,c++
+
+# Build GCC
+RUN make -j$(nproc)
+
+# Install GCC using s6-alternatives
+RUN make install
+
+# Clean up
+WORKDIR /
+RUN rm -rf /tmp/gcc-${GCC_VERSION}*
+
+# Set the entry point
+CMD ["/bin/sh"]
