@@ -4,6 +4,9 @@
 	"name": "C++",
 	"build": {
 		"dockerfile": "Dockerfile.gcc"
+		"args": {
+			"GCC_VERSION": "10.1.0"
+		  }
 	},
 	
 	"extensions": [
