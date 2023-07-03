@@ -31,7 +31,7 @@ RUN $PWD/../gcc-${GCC_VERSION}/configure --prefix=/usr/local/gcc-${GCC_VERSION} 
 # Build GCC
 RUN make -j$(nproc)
 
-# Install GCC using s6-alternatives
+# Install GCC
 RUN make install
 
 # Clean up
