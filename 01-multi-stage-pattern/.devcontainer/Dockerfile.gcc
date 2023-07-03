@@ -1,0 +1,50 @@
+# Stage 1: Build environment
+FROM alpine:latest AS build-env
+
+ARG GCC_VERSION
+
+# Install dependencies
+RUN apk update && apk add --no-cache build-base linux-headers binutils libtool flex bison wget 
+
+WORKDIR /tmp
+
+# Download and extract GCC source code
+RUN wget https://ftpmirror.gnu.org/gcc/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.xz && \
+    tar xf gcc-${GCC_VERSION}.tar.xz
+
+# Set working directory
+WORKDIR /tmp/gcc-${GCC_VERSION}
+
+# Download additional prerequisites
+RUN ./contrib/download_prerequisites
+
+# Set build directory
+WORKDIR /tmp/gcc-${GCC_VERSION}-build
+
+# Configure the build
+RUN $PWD/../gcc-${GCC_VERSION}/configure --prefix=/usr/local/gcc-${GCC_VERSION} --disable-multilib --disable-nls  --disable-bootstrap --disable-libsanitizer --enable-languages=c,c++
+
+# Build GCC
+RUN make -j$(nproc)
+
+# Install GCC
+RUN make install
+
+# Stage 2: Production image
+FROM alpine:latest
+
+ARG GCC_VERSION
+
+# Install dependencies
+RUN apk add --no-cache libstdc++
+
+# Copy the built GCC binaries from the build environment
+COPY --from=build-env /usr/local/gcc-${GCC_VERSION} /usr/local/gcc-${GCC_VERSION}
+
+# Set the environment variables
+ENV PATH=/usr/local/gcc-${GCC_VERSION}/bin:$PATH
+ENV LD_LIBRARY_PATH=/usr/local/gcc-${GCC_VERSION}/lib64:/usr/local/gcc-${GCC_VERSION}/lib:$LD_LIBRARY_PATH
+
+
+# Set the entry point
+CMD ["/bin/sh"]
