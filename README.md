@@ -19,21 +19,21 @@ Containerization has revolutionized the deployment of applications, enabling eff
 
 The following container patterns are covered in this repository:
 
-1. Sidecar Pattern: Demonstrates how to enhance the functionality of a main container by attaching a separate sidecar container to provide additional services or capabilities.
+1. Multi-Stage Pattern: Highlights the use of multiple build stages to optimize container images by reducing their size and eliminating unnecessary build artifacts.
 
-2. Ambassador Pattern: Illustrates the use of an intermediary container to manage network connectivity, load balancing, and other communication-related tasks between containers.
+2. Sidecar Pattern: Demonstrates how to enhance the functionality of a main container by attaching a separate sidecar container to provide additional services or capabilities.
 
-3. Adapter Pattern: Shows how to use an adapter container to bridge incompatible interfaces and enable effective communication between containers.
+3. Ambassador Pattern: Illustrates the use of an intermediary container to manage network connectivity, load balancing, and other communication-related tasks between containers.
 
-4. Fan-Out Pattern: Provides an example of distributing workloads across multiple containers in parallel to improve scalability and performance.
+4. Adapter Pattern: Shows how to use an adapter container to bridge incompatible interfaces and enable effective communication between containers.
 
-5. Sidecar Injector Pattern: Demonstrates the dynamic injection of sidecar containers based on specific conditions or requirements.
+5. Fan-Out Pattern: Provides an example of distributing workloads across multiple containers in parallel to improve scalability and performance.
 
-6. Singleton Pattern: Illustrates how to ensure that only one instance of a container is active at any given time to maintain consistency and prevent conflicts.
+6. Sidecar Injector Pattern: Demonstrates the dynamic injection of sidecar containers based on specific conditions or requirements.
 
-7. Work Queue Pattern: Shows how to use a separate container to manage and distribute tasks or jobs to other containers in a queue-based fashion.
+7. Singleton Pattern: Illustrates how to ensure that only one instance of a container is active at any given time to maintain consistency and prevent conflicts.
 
-8. Multi-Stage Pattern: Highlights the use of multiple build stages to optimize container images by reducing their size and eliminating unnecessary build artifacts.
+8. Work Queue Pattern: Shows how to use a separate container to manage and distribute tasks or jobs to other containers in a queue-based fashion.
 
 ## Examples
 
