@@ -25,8 +25,12 @@ RUN ./contrib/download_prerequisites
 WORKDIR /tmp/gcc-${GCC_VERSION}-build
 
 # Configure the build
-#RUN $PWD/../gcc-${GCC_VERSION}/configure --prefix=/usr/local/gcc-${GCC_VERSION} --program-suffix=-${GCC_SUFFIX_STRING} --disable-multilib --disable-nls  --disable-bootstrap --disable-libsanitizer --enable-languages=c,c++
-RUN $PWD/../gcc-${GCC_VERSION}/configure --prefix=/usr/local/gcc-${GCC_VERSION} --disable-multilib --disable-nls  --disable-bootstrap --disable-libsanitizer --enable-languages=c,c++
+# NOTE: In the case of Alpine Linux inside a Docker container, the musl C library has limited
+# support for the AddressSanitizer and may cause issues with building GCC/LLVM/Clang with sanitizers.
+# To work around this issue, you can consider using a different base image for your Docker container
+# that includes a different C library, such as glibc. The debian or ubuntu base images are popular
+# choices that come with glibc and provide better compatibility for building GCC/LLVM/Clang with sanitizers.
+RUN $PWD/../gcc-${GCC_VERSION}/configure --prefix=/usr/local/gcc-${GCC_VERSION} --disable-multilib --disable-nls --disable-bootstrap --disable-libsanitizer --enable-languages=c,c++
 
 # Build GCC
 RUN make -j$(nproc)
