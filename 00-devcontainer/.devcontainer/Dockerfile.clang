@@ -1,0 +1,38 @@
+# Base image
+FROM alpine:latest
+
+# Install dependencies
+RUN apk update && apk add --no-cache build-base linux-headers binutils libtool flex bison wget cmake python3 git
+
+# Set the LLVM and Compiler-RT versions
+ARG LLVM_VERSION=13.0.0
+
+# Clone the LLVM repository
+WORKDIR /tmp
+RUN git clone --depth 1 --branch llvmorg-${LLVM_VERSION} https://github.com/llvm/llvm-project.git llvm-project
+
+# Create a build directory and navigate into it
+WORKDIR /tmp/llvm-project/build
+
+# Configure the build
+# NOTE: In the case of Alpine Linux inside a Docker container, the musl C library has limited
+# support for the AddressSanitizer and may cause issues with building GCC/LLVM/Clang with sanitizers.
+# To work around this issue, you can consider using a different base image for your Docker container
+# that includes a different C library, such as glibc. The debian or ubuntu base images are popular
+# choices that come with glibc and provide better compatibility for building GCC/LLVM/Clang with sanitizers.
+RUN cmake -G "Unix Makefiles" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DLLVM_ENABLE_PROJECTS="clang" \
+    -DLLVM_BUILD_TESTS=OFF \
+    -DLLVM_ENABLE_ASSERTIONS=ON \
+    ../llvm
+
+# Build clang
+RUN make -j $(nproc)
+
+# Install clang
+RUN make install
+
+# Clean up
+WORKDIR /
+RUN rm -rf /tmp/llvm-project*
