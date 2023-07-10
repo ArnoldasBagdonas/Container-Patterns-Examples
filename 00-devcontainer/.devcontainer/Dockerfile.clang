@@ -36,3 +36,6 @@ RUN make install
 # Clean up
 WORKDIR /
 RUN rm -rf /tmp/llvm-project*
+
+# Set the entry point
+CMD ["/bin/sh"]
